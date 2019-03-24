@@ -11,6 +11,18 @@ body {
   width: 100%;
 }
 
+.card {
+  width: 256px;
+  margin: 12px;
+  line-height: 0;
+  border: 1px solid red;
+
+}
+
+.image {
+  background: transparent url(./static/icon.svg) no-repeat scroll center center;
+}
+
 .images-wrapper {
   border: 1px solid pink;
 }

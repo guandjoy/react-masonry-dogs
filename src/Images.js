@@ -16,6 +16,11 @@ const query = gql`
   }
 `;
 
+const randomKey = () =>
+  Math.random()
+    .toString(36)
+    .substr(2, 9);
+
 function Images(props) {
   const initialPath = () => {
     switch (props.breedFilter) {
@@ -29,17 +34,14 @@ function Images(props) {
   useEffect(() => {
     setPath(initialPath);
   });
-  const randomKey = () =>
-    Math.random()
-      .toString(36)
-      .substr(2, 9);
+
   return (
     <Query query={query} variables={{ path }}>
       {({ loading, error, data }) => {
         if (loading) return <div id="loading" />;
         if (error) return <p>Error</p>;
         const cards = data.images.message.map((image, index) => (
-          <div key={index}>
+          <div key={randomKey()}>
             <CardContent image={image} />
           </div>
         ));

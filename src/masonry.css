@@ -1,15 +1,9 @@
-.card-container {
-  width: 256px;
-  margin: 12px;
-  line-height: 0;
-  border: 1px solid red;
-}
 
 .masonry {
-  border: 5px solid green;
+  border: 1px solid green;
 }
 
 .boundry-box {
   margin: auto;
-  border: 10px solid black;
+  border: 1px solid black;
 }
