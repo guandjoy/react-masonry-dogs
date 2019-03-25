@@ -15,8 +15,6 @@ body {
   width: 256px;
   margin: 12px;
   line-height: 0;
-  border: 1px solid red;
-
 }
 
 .image {
@@ -24,7 +22,7 @@ body {
 }
 
 .images-wrapper {
-  border: 1px solid pink;
+  
 }
 
 .filter {
