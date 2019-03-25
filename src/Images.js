@@ -41,9 +41,7 @@ function Images(props) {
         if (loading) return <div id="loading" />;
         if (error) return <p>Error</p>;
         const cards = data.images.message.map((image, index) => (
-          <div key={randomKey()}>
-            <CardContent image={image} />
-          </div>
+          <CardContent key={randomKey()} image={image} />
         ));
         return (
           <div className="images-wrapper">
