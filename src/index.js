@@ -6,13 +6,11 @@ import "./styles.css";
 
 import Filter from "./components/Filter";
 import Images from "./components/Images";
-import NavBar from "./components/NavBar";
 
 function App() {
   return (
     <ApolloProvider client={apolloClient}>
       <div className="App">
-        <NavBar />
         <Filter />
         <Images />
       </div>

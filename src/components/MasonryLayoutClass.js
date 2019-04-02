@@ -4,8 +4,8 @@ class MasonryLayoutClass extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      failedCount: 0,
-      loadCount: 0,
+      onErrorCount: 0,
+      onLoadCount: 0,
       columns: 0,
       transition: false,
       layout: {
@@ -32,8 +32,8 @@ class MasonryLayoutClass extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.columns != this.state.columns 
-      || prevState.loadCount != this.state.loadCount
+    if (prevState.columns !== this.state.columns 
+      || prevState.onLoadCount !== this.state.onLoadCount
     ) {
       var protoElements = [];
       var endline = [];
@@ -68,12 +68,12 @@ class MasonryLayoutClass extends React.Component {
   }
 
   errorHandler(index) {
-    this.setState({failedCount: this.state.failedCount + 1})
+    this.setState({onErrorCount: this.state.onErrorCount + 1})
     console.log("can't load: ", index)
   }
 
   loadHandler() {
-    this.setState({ loadCount: this.state.loadCount + 1 })
+    this.setState({ onLoadCount: this.state.onLoadCount + 1 })
   }
 
   updateCardRefMeasures() {
@@ -98,7 +98,7 @@ class MasonryLayoutClass extends React.Component {
     const columnsNum = Math.floor(wrapperWidth / this.elementRefMeasures.totalWidth) 
     this.setState({ 
       columns: columnsNum,
-      transition: evt != undefined
+      transition: evt !== undefined
     })
   }
 

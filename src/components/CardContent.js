@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from 'styled-components'
 
 const randomHeight = () => Math.floor(Math.random() * 170) + 128 
@@ -56,14 +56,20 @@ function CardContent(props) {
   // const imageID = Math.random().toString(36).substr(2, 9)
   const [isLoad, setIsLoad] = useState(false)
   const [isError, setIsError] = useState(false)
-  const [height, setHeight] = useState(randomHeight())
+  const [height] = useState(randomHeight())
   const onLoadHandler = () => setIsLoad(true)
   const onErrorHandler = () => setIsError(true)
   return (
     <StyledDiv className={!isLoad && 'loading'} height={height} >
       <div className="number">{props.number}</div>
       <div className="error">{isError ? 'failed to load' : null}</div>
-      <img src={props.image} onLoad={onLoadHandler} onError={onErrorHandler} className={`image ${!isLoad && "loading"}`} />
+      <img 
+        src={props.image} 
+        alt="dog"
+        onLoad={onLoadHandler} 
+        onError={onErrorHandler}
+        className={`image ${!isLoad && "loading"}`} 
+      />
     </StyledDiv>
   );
 }

@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Query, compose, withApollo, graphql } from "react-apollo";
-import gql from "graphql-tag";
+import { Query, withApollo } from "react-apollo";
 import styled from 'styled-components'
-import getBreedFilter from "../queries/getBreedFilter";
+
+import "@material/react-chips/dist/chips.css";
+import {ChipSet, Chip} from '@material/react-chips';
+
+import getBreeds from '../queries/getBreeds'
 
 const FilterWrapper = styled.div`
   padding: 0px;
@@ -12,10 +15,7 @@ const FilterWrapper = styled.div`
   .filter {
     margin: 0px;
     padding: 12px 24px 12px 24px;
-    display: flex;
     justify-content: center;
-    flex-direction: row;
-    flex-wrap: wrap;    
   }
 
   .breed {
@@ -51,46 +51,32 @@ function Filter(props) {
   const [scrollParams, setScrollParams] = useState({
     width: 0,
   })
-  const scrollHandler = () => {
-    setScrollParams({...scrollParams, left: filterRef.current.scrollLeft})
-  }
   useEffect(() => {
     setScrollParams(filterRef.current ? {width: filterRef.current.scrollWidth, left: filterRef.current.scrollLeft} : scrollParams)
   }, [filter])
   return (
-    <Query
-      query={gql`
-        query {
-          breeds @rest(type: "breeds", path: "breeds/list/all") {
-            status
-            message
-            __typename
-          }
-        }
-      `}
-    >
+    <Query query={getBreeds} >
       {({ loading, error, data }) => {
         if (loading) return <p>Loading...</p>;
         if (error) return `Error!: ${error}`;
         const breedsArray = Object.keys(data.breeds.message)
         breedsArray.unshift('all')
         const breeds = breedsArray.map(breed => (
-          <li
-            key={breed}
+          <Chip
+            id={breed}
+            key={`chip-${breed}`}
+            label={breed}
             onClick={() => {
               props.client.writeData({ data: { breedFilter: breed } });
               setFilter(breed)
             }}
-            className={filter === breed ? 'breed active' : 'breed'}
-          >
-            {breed}
-          </li>
+          />
         ));
         return (
           <FilterWrapper>
-            <ul ref={filterRef} onScroll={scrollHandler} className="filter">
+            <ChipSet choice className="filter">
               {breeds}
-            </ul>
+            </ChipSet>
           </FilterWrapper>
         );
       }}

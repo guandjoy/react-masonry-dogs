@@ -1,12 +1,6 @@
-import React, { useEffect, useRef, useState, useLayoutEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-
-var elementRefWidth = 0
-var elementRefMarginTop = 0
-var elementRefMarginRight = 0
-var elementRefMarginBottom = 0
-var elementRefMarginLeft = 0
-var elementRefTotalWidth = 0
+var elementRefMeasures = {}
 
 function MasonryLayout(props) {
   const masonryLayout = useRef();
@@ -15,9 +9,8 @@ function MasonryLayout(props) {
   const checkLayout = (evt) => {
     updateCardRefMeasures()
     const wrapperWidth = masonryLayout.current.offsetWidth;
-    const columnsNum = Math.floor(wrapperWidth / elementRefTotalWidth)
-    setColumns(Math.floor(wrapperWidth / elementRefTotalWidth));
-    setTransition(evt != undefined)
+    setColumns(Math.floor(wrapperWidth / elementRefMeasures.totalWidth));
+    setTransition(evt !== undefined)
   };
   useEffect(() => {
     // mount and unmount only
@@ -28,41 +21,40 @@ function MasonryLayout(props) {
     };
   }, []);
 
-  const [failedCount, setFailedCount] = useState(0);
+  const [onErrorCount, setOnErrorCount] = useState(0);
   const errorHandler = index => {
-    setFailedCount(failedCount + 1);
+    setOnErrorCount(onErrorCount + 1);
     console.log("can't load: ", index);
   };
 
-  const [loadCount, setLoadCount] = useState(0);
+  const [onLoadCount, setOnLoadCount] = useState(0);
   const loadHandler = index => {
-    setLoadCount(loadCount + 1);
+    setOnLoadCount(onLoadCount + 1);
   };
 
   const updateCardRefMeasures = () => {
     const style = window.getComputedStyle(elementRef.current)
-    elementRefWidth = elementRef.current.offsetWidth
-    elementRefMarginTop = Number(style.marginTop.replace(/[^0-9]/g, ""))
-    elementRefMarginRight = Number(style.marginRight.replace(/[^0-9]/g, ""))
-    elementRefMarginBottom = Number(style.marginBottom.replace(/[^0-9]/g, ""))
-    elementRefMarginLeft = Number(style.marginLeft.replace(/[^0-9]/g, ""))
-    elementRefTotalWidth = (
+    elementRefMeasures = {
+      width: elementRef.current.offsetWidth,
+      marginTop: Number(style.marginTop.replace(/[^0-9]/g, "")),
+      marginRight: Number(style.marginRight.replace(/[^0-9]/g, "")),
+      marginBottom: Number(style.marginBottom.replace(/[^0-9]/g, "")),
+      marginLeft: Number(style.marginLeft.replace(/[^0-9]/g, "")),
+      totalWidth: (
         elementRef.current.offsetWidth 
         + Number(style.marginRight.replace(/[^0-9]/g, "")) 
         + Number(style.marginLeft.replace(/[^0-9]/g, ""))
       )
+    }
   }
 
   // everytime window resize
   const [columns, setColumns] = useState(0);
 
-
   const [transition, setTransition] = useState(false)
   useEffect(() => {
     setTransition(false)
   }, [props.children])
-
-
   
 
   const [layout, setLayout] = useState({
@@ -70,7 +62,7 @@ function MasonryLayout(props) {
     width: 0,
     height: 0
   })
-  useLayoutEffect(
+  useEffect(
     () => {
       var protoElements = [];
       var endline = [];
@@ -79,27 +71,29 @@ function MasonryLayout(props) {
       }
       updateCardRefMeasures()
       React.Children.map(props.children, (child, index) => {
+        // Calculate positions of each element
         let height =
           document.getElementById(child.key).offsetHeight +
-          elementRefMarginTop +
-          elementRefMarginBottom;
+          elementRefMeasures.marginTop +
+          elementRefMeasures.marginBottom
         let leastNum = Math.min(...endline);
         let leastNumIndex = endline.indexOf(leastNum);
-        var posX = leastNumIndex * elementRefTotalWidth;
+        var posX = leastNumIndex * elementRefMeasures.totalWidth;
         var posY = endline[leastNumIndex];
         protoElements[index] = { x: posX, y: posY,};
         endline[leastNumIndex] += height;
       });
       setLayout({
         elements: protoElements, // list of all elements with coorditares
-        width: elementRefTotalWidth * columns, // width of the whole layout
+        width: elementRefMeasures.totalWidth * columns, // width of the whole layout
         height: endline[endline.indexOf(Math.max(...endline))] // height of the whole layout 
       })
-    }, [columns, loadCount, props.children]
+    }, [columns, onLoadCount, props.children]
   );
 
-  const renderChildren = () =>
+  const renderChildren =
     React.Children.map(props.children, (child, index) => {
+      // Change eash child
       let newComponent = (
         <div
           className="element-bounding"
@@ -131,8 +125,7 @@ function MasonryLayout(props) {
         }}
         className="boundry-box"
       >
-        {renderChildren()}
-        {console.log('render')}
+        {renderChildren}
       </div>
     </div>
   );

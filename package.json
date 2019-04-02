@@ -5,6 +5,7 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
+    "@material/react-chips": "^0.11.0",
     "apollo-cache-inmemory": "1.5.1",
     "apollo-client": "2.5.1",
     "apollo-link-rest": "0.7.0",
@@ -16,9 +17,12 @@
     "react": "16.8.3",
     "react-apollo": "2.5.2",
     "react-dom": "16.8.3",
-    "react-scripts": "2.0.3"
+    "react-scripts": "^2.1.8",
+    "styled-components": "^4.2.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint-plugin-react-hooks": "^1.6.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
