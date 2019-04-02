@@ -19,8 +19,8 @@ function Images(props) {
         return `breed/${props.breedFilter}/images/random/20`;
     }
   };
+  
   const [path, setPath] = useReducer(changePath, changePath())
-
   useEffect(() => {
     setPath()
   }, [props.breedFilter])
