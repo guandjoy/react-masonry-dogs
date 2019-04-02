@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Query, compose, graphql } from "react-apollo";
+import React, { useState, useEffect, useRef, useReducer } from "react";
+import { Query, graphql } from "react-apollo";
 import gql from "graphql-tag";
 
-import getBreedFilter from "./queries/getBreedFilter";
+import getBreedFilter from "../queries/getBreedFilter";
 
 import CardContent from "./CardContent";
 import MasonryLayout from "./MasonryLayout";
+import MasonryLayoutClass from "./MasonryLayoutClass";
 
 const query = gql`
   query getBreedFilter($path: String!) {
@@ -16,13 +17,9 @@ const query = gql`
   }
 `;
 
-const randomKey = () =>
-  Math.random()
-    .toString(36)
-    .substr(2, 9);
 
 function Images(props) {
-  const initialPath = () => {
+  const changePath = () => {
     switch (props.breedFilter) {
       case "all":
         return "breeds/image/random/10";
@@ -30,10 +27,10 @@ function Images(props) {
         return `breed/${props.breedFilter}/images/random/50`;
     }
   };
-  const [path, setPath] = useState(initialPath());
+  const [path, setPath] = useReducer(changePath, changePath())
   useEffect(() => {
-    setPath(initialPath);
-  });
+    setPath()
+  }, [props.breedFilter])
 
   return (
     <Query query={query} variables={{ path }}>
@@ -41,14 +38,14 @@ function Images(props) {
         if (loading) return <div id="loading" />;
         if (error) return <p>Error</p>;
         const cards = data.images.message.map((image, index) => (
-          <CardContent key={randomKey()} image={image} />
+          <CardContent key={image} number={index + 1} image={image} />
         ));
         return (
           <div className="images-wrapper">
-            <h1>{props.breedFilter}</h1>
-            <MasonryLayout style={{ border: "5px solid red" }}>
+
+            <MasonryLayoutClass>
               {cards}
-            </MasonryLayout>
+            </MasonryLayoutClass>
           </div>
         );
       }}
@@ -56,11 +53,9 @@ function Images(props) {
   );
 }
 
-export default compose(
-  graphql(getBreedFilter, {
+export default graphql(getBreedFilter, {
     props: ({ data: { breedFilter, loading } }) => ({
       breedFilter,
       loading
     })
-  })
-)(Images);
+  })(Images);

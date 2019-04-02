@@ -4,9 +4,9 @@ import { ApolloProvider } from "react-apollo";
 import apolloClient from "./ApolloClient";
 import "./styles.css";
 
-import Filter from "./Filter";
-import Images from "./Images";
-import NavBar from "./NavBar";
+import Filter from "./components/Filter";
+import Images from "./components/Images";
+import NavBar from "./components/NavBar";
 
 function App() {
   return (
