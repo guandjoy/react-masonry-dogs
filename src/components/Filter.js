@@ -46,14 +46,6 @@ const StyledDiv = styled.div`
 
 
 function Filter(props) {
-  const filterRef = useRef()
-  const [filter, setFilter] = useState('all')
-  const [scrollParams, setScrollParams] = useState({
-    width: 0,
-  })
-  useEffect(() => {
-    setScrollParams(filterRef.current ? {width: filterRef.current.scrollWidth, left: filterRef.current.scrollLeft} : scrollParams)
-  }, [filter])
   return (
     <Query query={getBreeds} >
       {({ loading, error, data }) => {
@@ -66,10 +58,7 @@ function Filter(props) {
             id={breed}
             key={`chip-${breed}`}
             label={breed}
-            onClick={() => {
-              props.client.writeData({ data: { breedFilter: breed } });
-              setFilter(breed)
-            }}
+            onClick={() => { props.client.writeData({ data: { breedFilter: breed } }) }}
           />
         ));
         return (
