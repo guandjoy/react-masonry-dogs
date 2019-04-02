@@ -7,7 +7,7 @@ import {ChipSet, Chip} from '@material/react-chips';
 
 import getBreeds from '../queries/getBreeds'
 
-const FilterWrapper = styled.div`
+const StyledDiv = styled.div`
   padding: 0px;
   overflow: hidden;
   width: 100vw;
@@ -73,11 +73,11 @@ function Filter(props) {
           />
         ));
         return (
-          <FilterWrapper>
+          <StyledDiv>
             <ChipSet choice className="filter">
               {breeds}
             </ChipSet>
-          </FilterWrapper>
+          </StyledDiv>
         );
       }}
     </Query>
